@@ -1,0 +1,11 @@
+.grid-container {
+    display: grid;
+    height: 100%;
+    grid-template-columns: 1fr;
+    grid-template-areas: "updateUser";
+  }
+
+  .addProduct {
+    grid-area: updateUser;
+  }
+  

@@ -1,0 +1,11 @@
+<div class="card">
+    <a class="img-container" (click)="goToProduct()" [ngStyle]="{ 'background-image': 'url(' + product.image + ')'}">
+    </a>
+    <div class="info">
+      <h3>{{product.price}}€</h3>
+      <p>Talla: {{product.size}}</p>
+      <p>{{product.color | uppercase }}</p>
+      <h6>Descripción:</h6>
+      <p>{{product.description}}</p>
+    </div>
+  </div>

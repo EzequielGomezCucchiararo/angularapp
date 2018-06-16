@@ -22,6 +22,7 @@ import { LoadingComponent } from './shared/loading/loading.component';
 import { ProductCardComponent } from './products/product-card/product-card.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MyProductsComponent } from './products/my-products/my-products.component';
+import { FilterComponent } from './shared/filter/filter.component';
 
 
 
@@ -41,6 +42,7 @@ import { MyProductsComponent } from './products/my-products/my-products.componen
     ProductCardComponent,
     ProfileComponent,
     MyProductsComponent,
+    FilterComponent,
     
   ],
   imports: [

@@ -15,10 +15,6 @@ export class HomepageComponent implements OnInit, OnDestroy {
 	public products: Product[] = [];
 	public productsFiltered: Product[] = [];
 	public loading: boolean = true;
-	private currentFilter: any = {
-		size: '',
-		price: ''
-	}
 	private productsSubscription: Subscription = null;
 
 	constructor(
@@ -45,57 +41,20 @@ export class HomepageComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private filterProducts(filterData: any): Product[] {
-		let productsFiltered = [];
+	filterProducts(filterData: any): Product[] {
+		let productsFiltered = this.products.filter((product: Product) => {
+			let passPrice = (product.price >= filterData.minPrice) && (product.price <= filterData.maxPrice);
+			let passSize = false;
 
-		if (filterData.type === 'size') {
-			if (filterData.value) {
-				productsFiltered = this.products.filter((product: Product) => {
-					return product.size === +filterData.value;
-				})
+			if (filterData.size) {
+				passSize = filterData.size === product.size;
 			} else {
-				productsFiltered = [...this.products];
+				passSize = true;
 			}
-		}
 
-		if (filterData.type === 'price') {
-			let min = 0;
-			let max = 0;
-			if (filterData) {
-				switch (filterData.value) {
-					case '-50':
-						min = 0;
-						max = 50;
-						break;
-
-					case '50-100':
-						min = 50;
-						max = 100;
-						break;
-
-					case '100-200':
-						min = 100;
-						max = 200;
-						break;
-
-					case '200-500':
-						min = 200;
-						max = 500;
-						break;
-
-					case '500+':
-						min = 500;
-						max = 500000;
-						break;
-				}
-				productsFiltered = this.products.filter((product: Product) => {
-					return ((product.price >= min) && (product.price <= max));
-				})
-			} else {
-				productsFiltered = [...this.products];
-			}
-		}
-
+			return passSize && passPrice;
+		});
+		
 		return productsFiltered;
 	}
 

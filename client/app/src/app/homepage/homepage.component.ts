@@ -23,6 +23,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
+		console.warn('window.location.href', window.location.href);
 		this.productsSubscription = this.productsService.getProducts()
 			.subscribe((data: any) => {
 				this.products = data.data;

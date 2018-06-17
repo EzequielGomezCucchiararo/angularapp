@@ -197,7 +197,7 @@ const logic = {
       .then(() => true)
   },
 
-  addProductToUser (ownerId, image, price, size, color, description) {
+  addProductToUser (ownerId, image = '', price, size, color, description) {
     return Promise.resolve()
       .then(() => {
         if (typeof ownerId !== 'string') throw Error('owner id is not a string')

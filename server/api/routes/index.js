@@ -4,6 +4,21 @@ const logic = require('logic')
 const jwt = require('jsonwebtoken')
 const jwtValidation = require('./utils/jwt-validation')
 
+const multer = require('multer');
+// const upload = multer({ dest: 'uploads/' });
+
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, './uploads')
+	},
+	filename: (req, file, cb) => {
+		cb(null, file.originalname)
+	}
+});
+const upload = multer({ 
+	storage: storage
+});
+
 const router = express.Router()
 
 const { env: { TOKEN_SECRET, TOKEN_EXP } } = process
@@ -84,10 +99,14 @@ router.delete('/users/:userId', [jwtValidator, jsonBodyParser], (req, res) => {
     })
 })
 
-router.post('/users/:userId/products', [jwtValidator, jsonBodyParser], (req, res) => {
-  const { params: { userId }, body: { imgUrl, price, size, color, description } } = req
+router.post('/users/:userId/products', [jwtValidator, upload.single('image')], (req, res) => {
 
-  logic.addProductToUser(userId, imgUrl, price, size, color, description)
+  const { params: { userId }, body: { price, size, color, description } } = req
+  const image = req.file.path.replace("\\", "/");
+
+  console.warn(image);
+
+  logic.addProductToUser(userId, image, +price, +size, color, description)
     .then(() => {
       res.status(201)
       res.json({ status: 'OK' })

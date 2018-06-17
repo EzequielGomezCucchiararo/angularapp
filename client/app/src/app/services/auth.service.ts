@@ -11,7 +11,7 @@ export class AuthService {
 
   users: User[] = [];
 
-  userData: any;
+  userData: any = null;
 
   userId = localStorage.getItem('id');
 

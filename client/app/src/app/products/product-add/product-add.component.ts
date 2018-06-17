@@ -11,17 +11,17 @@ import { AuthService } from '../../services/auth.service';
 export class ProductAddComponent implements OnInit {
 
 	public product = {
-		// image: 'https://cdn0.bodas.net/emp/fotos/3/3/5/2/4/2018-helois-lunanovias-1_1_33524_v1.jpg',
+		image: null,
 		price: '', //EEEY EN EL BACK PONGO Q ES NUMBER
 		size: '',
 		color: '',
 		description: ''
 	}
 
-	constructor(private authService: AuthService) {
+	constructor(private authService: AuthService) { }
 
+	ngOnInit() { }
 
-	}
 	handlerSubmit() {
 		this.authService.addProduct({
 			...this.product,
@@ -32,7 +32,9 @@ export class ProductAddComponent implements OnInit {
 				console.log(res)
 			})
 	}
-	ngOnInit() {
+
+	onFileSelected(event) {
+		this.product.image = event.target.files[0];
 	}
 
 }

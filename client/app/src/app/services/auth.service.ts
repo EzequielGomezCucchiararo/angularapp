@@ -5,115 +5,123 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class AuthService {
 
-  users: User[] = [];
+	users: User[] = [];
 
-  userData: any = null;
+	userData: any = null;
 
-  userId = localStorage.getItem('id');
-
-
-  url: string = "http://localhost:5000/api/users";
-  urlAuth: string = "http://localhost:5000/api/auth";
+	userId = localStorage.getItem('id');
 
 
-  constructor(private http: HttpClient) {
-    console.log(this.userId)
-    this.cargarData()
-
-  }
-
-  headers() {
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    })
-  }
-
-  //..............LOCAL STORAGE...........
-  actualizarData() {
-    localStorage.setItem("token", this.userData.token)
-    
-    this.userId = this.userData.id
-    localStorage.setItem("id", this.userData.id)
-  }
-
-  cargarData() {
-    if (localStorage.getItem("data")) {
-      this.users = JSON.parse(localStorage.getItem("data"))
-    }
-  }
-
-  agregarUserData(data: any) {
-    this.userData = data;
-    this.actualizarData();
-  }
-  // //........................................
+	url: string = "http://localhost:5000/api/users";
+	urlAuth: string = "http://localhost:5000/api/auth";
 
 
+	constructor(private http: HttpClient) {
+		console.log(this.userId)
+		this.cargarData()
 
-  register(user: User) {
+	}
 
-    let body = JSON.stringify(user);
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+	headers() {
+		return new HttpHeaders({
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${localStorage.getItem('token')}`
+		})
+	}
 
-    return this.http.post(this.url, user)
-      .pipe(map(res => {
-        console.log(res)
-        return res
-      }))
+	//..............LOCAL STORAGE...........
+	actualizarData() {
+		localStorage.setItem("token", this.userData.token)
 
-  }
+		this.userId = this.userData.id
+		localStorage.setItem("id", this.userData.id)
+	}
 
-  login(params) {
-    let body = JSON.stringify(params);
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+	cargarData() {
+		if (localStorage.getItem("data")) {
+			this.users = JSON.parse(localStorage.getItem("data"))
+		}
+	}
 
-    return this.http.post(this.urlAuth, params)
-      .pipe(map(res => {
-        console.log(res)
-        return res
-      }))
-  }
-
-  updateUser( dataUser ) {
-
-    console.log(localStorage.getItem('token'));
-
-    let body = JSON.stringify(dataUser);
-
-    return this.http.patch(`http://localhost:5000/api/users/${this.userId}`, dataUser, { headers: this.headers() })
-      .pipe(map(res => {
-        console.log(res)
-        return res
-      }))
-
-  }
-
-  retrieveUserProducts() {
-    
-    return this.http.get(`http://localhost:5000/api/users/${this.userId}/products`,{ headers: this.headers() })
-      .pipe(map ( res => {
-        console.log(res)
-        return res
-      }))
-  }
+	agregarUserData(data: any) {
+		this.userData = data;
+		this.actualizarData();
+	}
+	// //........................................
 
 
-  addProduct (params) {
-    console.log(params)
 
-    let body = JSON.stringify(params);
+	register(user: User) {
 
-    return this.http.post(`http://localhost:5000/api/users/${this.userId}/products`, params, { headers: this.headers() })
-  }
+		let body = JSON.stringify(user);
+		let headers = new HttpHeaders({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post(this.url, user)
+			.pipe(map(res => {
+				console.log(res)
+				return res
+			}))
+
+	}
+
+	login(params) {
+		let body = JSON.stringify(params);
+		let headers = new HttpHeaders({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post(this.urlAuth, params)
+			.pipe(map(res => {
+				console.log(res)
+				return res
+			}))
+	}
+
+	updateUser(dataUser) {
+
+		console.log(localStorage.getItem('token'));
+
+		let body = JSON.stringify(dataUser);
+
+		return this.http.patch(`http://localhost:5000/api/users/${this.userId}`, dataUser, { headers: this.headers() })
+			.pipe(map(res => {
+				console.log(res)
+				return res
+			}))
+
+	}
+
+	retrieveUserProducts() {
+
+		return this.http.get(`http://localhost:5000/api/users/${this.userId}/products`, { headers: this.headers() })
+			.pipe(map(res => {
+				console.log(res)
+				return res
+			}))
+	}
+
+
+	addProduct(params) {
+		let headers = new HttpHeaders({
+			'Authorization': `Bearer ${localStorage.getItem('token')}`
+		});
+
+		let fd = new FormData();
+
+		fd.append('image', params.image, params.image.name)
+		fd.append('price', params.price)
+		fd.append('size', params.size)
+		fd.append('color', params.color)
+		fd.append('description', params.description)
+
+		return this.http.post(`http://localhost:5000/api/users/${this.userId}/products`, fd, { headers: headers })
+	}
 
 }
 
